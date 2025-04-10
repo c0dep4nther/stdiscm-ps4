@@ -7,6 +7,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+console.log("mongo uri", process.env.MONGO_URI);
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to Course DB'))

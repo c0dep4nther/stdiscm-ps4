@@ -3,6 +3,7 @@ import { getAllCourses, enrollStudent } from './courseController.js';
 
 const router = express.Router();
 
-router.get('/hello', (req, res) => res.send('Hello, World!'));
+router.get('/', getAllCourses);
+router.post('/:courseId/enroll', enrollStudent);
 
 export default router;

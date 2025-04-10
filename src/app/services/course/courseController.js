@@ -29,3 +29,4 @@ export const enrollStudent = async (req, res) => {
         res.status(500).json({ error: 'Enrollment failed' });
     }
 };
+
