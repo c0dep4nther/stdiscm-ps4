@@ -10,6 +10,7 @@ const courseSchema = new mongoose.Schema({
     courseCode: {type: String, required: true, unique: true},
     title: {type: String, required: true},
     description: String,
+    enrolledStudents: { type: [String], default: [] },
     credits: {type: Number, required: true},
     instructor: {type: String, required: true},
     schedule: {type: scheduleSchema, required: true},
@@ -21,4 +22,12 @@ const courseSchema = new mongoose.Schema({
     prerequisites: {type: [String], default: []}
 }, {timestamps: true});
 
+export const getCourseByCode = async (courseCode) => {
+    try {
+        const course = await Course.findOne({ courseCode });
+        return course; // Return the course object
+    } catch (err) {
+        throw new Error('Failed to fetch course');
+    }
+};
 export const Course = mongoose.model('Course', courseSchema);
