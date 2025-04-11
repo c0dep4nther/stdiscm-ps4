@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  grades-api:
+    build: .
+    ports:
+      - "5003:5003"
+    environment:
+      - MONGO_URI=mongodb+srv://markdcg:7fCgFVpVrJ8ewNLe@cluster0.pysivmn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:5
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

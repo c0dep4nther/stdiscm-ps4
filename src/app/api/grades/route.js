@@ -1,7 +1,5 @@
 export async function GET() {
-  return Response.json([
-    { course: "Intro to AI", grade: "A" },
-    { course: "Data Structures", grade: "B+" }
-
-  ]);
+  const response = await fetch("http://localhost:5003/api/grades/getAll");
+  const courses = await response.json();
+  return Response.json(courses);
 }
