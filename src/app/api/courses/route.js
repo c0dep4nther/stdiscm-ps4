@@ -1,6 +1,5 @@
 export async function GET() {
-    return Response.json([
-      { id: 1, name: "Intro to AI", description: "Basics of Artificial Intelligence" },
-      { id: 2, name: "Data Structures", description: "Stacks, Queues, Trees, Graphs" }
-    ]);
-  }
+    const response = await fetch("http://localhost:5002/api/courses/");
+    const courses = await response.json();
+    return Response.json(courses);
+}

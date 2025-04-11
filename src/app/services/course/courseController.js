@@ -10,8 +10,7 @@ export const getAllCourses = async (req, res) => {
 };
 
 export const enrollStudent = async (req, res) => {
-    const { courseId } = req.params;
-    const { studentId } = req.body;
+    const { courseId, studentId } = req.body;
     console.log("enrollStudent", courseId, studentId);
 
     try {
