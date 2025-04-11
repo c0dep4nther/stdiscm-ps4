@@ -1,4 +1,5 @@
 "use client";
+import "./courses.css";
 import { useEffect, useState } from "react";
 
 export default function CoursesPage() {
@@ -7,7 +8,7 @@ export default function CoursesPage() {
 
   useEffect(() => {
     fetch("/api/courses")
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(setCourses);
   }, []);
 
@@ -18,9 +19,8 @@ export default function CoursesPage() {
     fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ courseId: id })
-    })
-    .then(() => setEnrolled(prev => ({ ...prev, [id]: !isCurrentlyEnrolled })));
+      body: JSON.stringify({ courseId: id }),
+    }).then(() => setEnrolled((prev) => ({ ...prev, [id]: !isCurrentlyEnrolled })));
   };
 
   return (
@@ -28,14 +28,19 @@ export default function CoursesPage() {
       <div className="login-form">
         <h2 className="login-title">Available Courses</h2>
         {courses.map((course) => (
-          <div key={course.id} className="login-input">
-            <p><strong>{course.name}</strong>: {course.description}</p>
+          <div key={course._id} className="course-card">
+            <h3 className="course-name">{course.title} ({course.courseCode})</h3>
+            <p className="course-description">{course.description}</p>
+            <p><strong>Instructor:</strong> {course.instructor}</p>
+            <p><strong>Schedule:</strong> {course.schedule.day} from {course.schedule.timeStart} to {course.schedule.timeEnd}</p>
+            <p><strong>Capacity:</strong> {course.capacity} students</p>
+            <p><strong>Enrolled:</strong> {course.enrolledStudents.length}/{course.capacity}</p>
             <button
-              onClick={() => handleToggleEnroll(course.id)}
+              onClick={() => handleToggleEnroll(course._id)}
               className="login-button mt-2"
-              style={{ backgroundColor: enrolled[course.id] ? '#dc2626' : '' }}
+              style={{ backgroundColor: enrolled[course._id] ? '#dc2626' : '#4CAF50' }}
             >
-              {enrolled[course.id] ? "Unenroll" : "Enroll"}
+              {enrolled[course._id] ? "Unenroll" : "Enroll"}
             </button>
           </div>
         ))}
