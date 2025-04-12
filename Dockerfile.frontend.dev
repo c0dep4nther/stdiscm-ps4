@@ -1,0 +1,17 @@
+FROM node:21-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json ./
+
+# Install dependencies
+RUN npm i
+
+# Instead of copying everything, we'll mount the src directory as a volume
+# This allows us to make changes without rebuilding
+
+EXPOSE 3000
+
+# Use development mode with turbopack for faster rebuilds
+CMD ["npm", "run", "dev"]

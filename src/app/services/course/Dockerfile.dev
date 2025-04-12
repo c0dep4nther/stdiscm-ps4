@@ -1,0 +1,14 @@
+FROM node:18
+
+WORKDIR /usr/src/app
+
+# Copy package.json and install dependencies
+COPY package.json ./
+RUN npm install
+RUN npm install -g nodemon
+
+# Expose the port
+EXPOSE 5002
+
+# Use nodemon for auto-restarting when files change
+CMD ["nodemon", "--legacy-watch", "app.js"]

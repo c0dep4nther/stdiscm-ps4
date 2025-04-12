@@ -1,0 +1,95 @@
+version: "3.8"
+
+services:
+  # Frontend Service
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend.dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - AUTH_SERVICE_URL=http://auth-service:5001
+      - COURSE_SERVICE_URL=http://course-service:5002
+      - GRADE_SERVICE_URL=http://grade-service:5003
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./next.config.mjs:/app/next.config.mjs
+      - /app/node_modules
+    networks:
+      - app-network
+
+  # Authentication Service
+  auth-service:
+    build:
+      context: ./src/app/services/auth
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - JWT_SECRET=supersecretkey
+      - MONGO_URI=mongodb://mongodb:27017/authDB
+    volumes:
+      - ./src/app/services/auth:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  # Course Service
+  course-service:
+    build:
+      context: ./src/app/services/course
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5002:5002"
+    environment:
+      - PORT=5002
+      - MONGO_URI=mongodb://mongodb:27017/courseDB
+    volumes:
+      - ./src/app/services/course:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  # Grade Service
+  grade-service:
+    build:
+      context: ./src/app/services/grade
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5003:5003"
+    environment:
+      - PORT=5003
+      - MONGO_URI=mongodb://mongodb:27017/gradeDB
+    volumes:
+      - ./src/app/services/grade:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  # Shared MongoDB
+  mongodb:
+    image: mongo:5
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-network
+    command: mongod --bind_ip_all
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
