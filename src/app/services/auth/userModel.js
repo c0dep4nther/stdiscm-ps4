@@ -1,7 +1,15 @@
-const users = [
-    { id: 1, username: 'student1', password: 'pass123', role: 'student' },
-    { id: 2, username: 'faculty1', password: 'pass456', role: 'faculty' }
-  ];
-  
-  export const findUser = (username) => users.find(u => u.username === username);
-  
+import mongoose from 'mongoose';
+
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['student', 'faculty'], required: true },
+});
+
+const User = mongoose.model('User', userSchema);
+
+export const findUser = async (username) => {
+  return await User.findOne({ username });
+};
+
+export default User;
