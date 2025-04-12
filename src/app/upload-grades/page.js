@@ -1,32 +1,36 @@
 "use client";
-import "./upload-grades.css";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function UploadGradesPage() {
   const [form, setForm] = useState({ studentId: "", course: "", grade: "" });
   const [courses, setCourses] = useState([]);
-  const [isFaculty, setIsFaculty] = useState(false);
+  const [isFaculty, setIsFaculty] = useState(false); // Check if the user is faculty
   const router = useRouter();
 
   useEffect(() => {
-    // check the user's role by decoding the JWT token stored in localStorage
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/login");
+      router.push("/login"); // Redirect to login if no token
       return;
     }
 
-    const decoded = JSON.parse(atob(token.split(".")[1])); // decode the JWT token
-    setIsFaculty(decoded.isStudent === false); // set to true if faculty
+    try {
+      const decoded = JSON.parse(atob(token.split(".")[1])); // Decode JWT safely
+      setIsFaculty(decoded.isStudent === false); // Set to true if faculty
 
-    if (decoded.isStudent === false) {
+      if (decoded.isStudent === true) {
+        alert("You are not authorized to access this page.");
+        router.push("/courses"); // Redirect to courses page for students
+        return;
+      }
+
       fetch("/api/courses")
         .then((res) => res.json())
         .then(setCourses);
-    } else {
-      // redirect student to courses page as they cannot upload grades
-      router.push("/courses");
+    } catch (error) {
+      console.error("Failed to decode token", error);
+      router.push("/login"); // Handle token decoding error and redirect to login
     }
   }, []);
 
@@ -45,11 +49,7 @@ export default function UploadGradesPage() {
   };
 
   if (!isFaculty) {
-    return (
-      <main className="login-main">
-        <h2 className="login-title">You are not authorized to access this page.</h2>
-      </main>
-    );
+    return <main className="login-main"><h2 className="login-title">Unauthorized Access</h2></main>;
   }
 
   return (
