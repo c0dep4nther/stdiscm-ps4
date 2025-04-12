@@ -10,24 +10,24 @@ export default function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
+
     // Ensure that username and password are not empty before making the request
     if (!username || !password) {
       alert("Please enter both username and password.");
       return;
     }
-  
+
     try {
-      const res = await fetch("http://localhost:5001/api/login", {
+      const res = await fetch("http://localhost:5001/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
-  
+
       // Check if the request was successful
       if (res.ok) {
         const data = await res.json();
-        
+
         // If a token is returned, store it and navigate
         if (data.token) {
           localStorage.setItem("token", data.token);
@@ -45,8 +45,6 @@ export default function LoginPage() {
       alert("An error occurred while logging in. Please try again later.");
     }
   };
-  
-  
 
   return (
     <main className="login-main">
@@ -68,7 +66,9 @@ export default function LoginPage() {
           className="login-input"
           required
         />
-        <button type="submit" className="login-button">Login</button>
+        <button type="submit" className="login-button">
+          Login
+        </button>
       </form>
     </main>
   );
