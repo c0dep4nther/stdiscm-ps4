@@ -4,11 +4,11 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ['student', 'faculty'], required: true },
+  isStudent: { type: Boolean, default: true },
 });
 
 // Create the user model
-const User = mongoose.model('users', userSchema);
+const User = mongoose.model("users", userSchema);
 
 // Method to find user by username
 export const findUser = async (username) => {
