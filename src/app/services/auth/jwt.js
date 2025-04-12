@@ -1,10 +1,14 @@
-import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from './config.js';
+import jwt from "jsonwebtoken";
 
-export const generateToken = (payload) => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
-};
+export function generateJWTToken(user) {
+  const payload = {
+    id: user._id,
+    username: user.username,
+    role: user.isStudent ? "student" : "faculty",  // Assuming you have a role field
+  };
 
-export const verifyToken = (token) => {
-  return jwt.verify(token, JWT_SECRET);
-};
+  const secret = process.env.JWT_SECRET || "your_jwt_secret";
+  const options = { expiresIn: "1h" };
+
+  return jwt.sign(payload, secret, options);
+}

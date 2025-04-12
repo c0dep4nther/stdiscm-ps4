@@ -10,19 +10,43 @@ export default function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
-    const data = await res.json();
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      router.push("/courses");
-    } else {
-      alert("Invalid login");
+    
+    // Ensure that username and password are not empty before making the request
+    if (!username || !password) {
+      alert("Please enter both username and password.");
+      return;
+    }
+  
+    try {
+      const res = await fetch("http://localhost:5001/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+  
+      // Check if the request was successful
+      if (res.ok) {
+        const data = await res.json();
+        
+        // If a token is returned, store it and navigate
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+          router.push("/courses");
+        } else {
+          alert("Invalid login credentials.");
+        }
+      } else {
+        // Handle HTTP errors like 401 Unauthorized
+        alert(`Error: ${res.statusText}`);
+      }
+    } catch (error) {
+      // Catch any network or other unexpected errors
+      console.error("Error during login:", error);
+      alert("An error occurred while logging in. Please try again later.");
     }
   };
+  
+  
 
   return (
     <main className="login-main">
