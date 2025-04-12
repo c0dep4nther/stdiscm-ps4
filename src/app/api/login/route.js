@@ -1,4 +1,4 @@
-import User from './userModel';  // Assuming User model is defined in userModel.js
+import User from "@/app/services/auth/userModel"; // Assuming User model is defined in userModel.js
 
 export async function POST(request) {
   const { username, password } = await request.json();
@@ -8,7 +8,7 @@ export async function POST(request) {
 
   if (user && user.password === password) {
     // Assuming JWT token creation happens here
-    const token = generateJWTToken(user);  // Implement JWT generation using the JWT secret
+    const token = generateJWTToken(user); // Implement JWT generation using the JWT secret
     return Response.json({ token });
   }
 

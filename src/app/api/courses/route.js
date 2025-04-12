@@ -1,5 +1,6 @@
 export async function GET() {
-    const response = await fetch("http://localhost:5002/api/courses/");
-    const courses = await response.json();
-    return Response.json(courses);
+  const baseUrl = process.env.COURSE_SERVICE_URL;
+  const response = await fetch(`${baseUrl}/api/courses/`);
+  const courses = await response.json();
+  return Response.json(courses);
 }

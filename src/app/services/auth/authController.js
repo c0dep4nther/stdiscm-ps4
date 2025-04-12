@@ -1,7 +1,7 @@
-import User from './userModel';  // Import the User model
-import { generateJWTToken } from './jwt';  // Import the JWT generation function
+import User from "./userModel.js"; // Import the User model
+import { generateJWTToken } from "./jwt.js"; // Import the JWT generation function
 
-export async function POST(request) {
+export async function login(request) {
   const { username, password } = await request.json();
 
   // Check if the user exists in the database
@@ -15,11 +15,11 @@ export async function POST(request) {
   }
 
   // If credentials don't match, send error response
-  return new Response(JSON.stringify({ error: "Invalid credentials" }), { status: 401 });
+  return new Response(JSON.stringify({ error: "Invalid credentials" }), {
+    status: 401,
+  });
 }
 
-
 export const logout = (req, res) => {
-  res.json({ message: 'Logout successful (discard token on client)' });
+  res.json({ message: "Logout successful (discard token on client)" });
 };
-
