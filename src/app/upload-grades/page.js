@@ -21,7 +21,7 @@ export default function UploadGradesPage() {
       setUserData(decoded);
       setIsFaculty(decoded.role === "faculty"); // Set to true if faculty
 
-      if (decoded.isStudent === "student") {
+      if (decoded.role === "student") {
         alert("You are not authorized to access this page.");
         router.push("/courses"); // Redirect to courses page for students
         return;
