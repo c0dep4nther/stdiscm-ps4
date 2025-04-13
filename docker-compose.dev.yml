@@ -31,7 +31,7 @@ services:
     environment:
       - PORT=5001
       - JWT_SECRET=supersecretkey
-      - MONGO_URI=mongodb://mongodb:27017/authDB
+      - MONGO_URI=mongodb+srv://markdcg:7fCgFVpVrJ8ewNLe@cluster0.pysivmn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
     volumes:
       - ./src/app/services/auth:/usr/src/app
       - /usr/src/app/node_modules
@@ -49,7 +49,7 @@ services:
       - "5002:5002"
     environment:
       - PORT=5002
-      - MONGO_URI=mongodb://mongodb:27017/courseDB
+      - MONGO_URI=mongodb+srv://markdcg:7fCgFVpVrJ8ewNLe@cluster0.pysivmn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
     volumes:
       - ./src/app/services/course:/usr/src/app
       - /usr/src/app/node_modules
@@ -67,7 +67,7 @@ services:
       - "5003:5003"
     environment:
       - PORT=5003
-      - MONGO_URI=mongodb://mongodb:27017/gradeDB
+      - MONGO_URI=mongodb+srv://markdcg:7fCgFVpVrJ8ewNLe@cluster0.pysivmn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
     volumes:
       - ./src/app/services/grade:/usr/src/app
       - /usr/src/app/node_modules
