@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Student Management System
 
-## Getting Started
+A comprehensive student management system built with Next.js frontend and microservices backend architecture.
 
-First, run the development server:
+## Project Overview
+
+This application consists of:
+- Next.js frontend
+- Authentication service
+- Course service
+- Grade service
+- MongoDB database
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd <project-directory>
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+## Running the Application
+
+### Development Mode
+
+Run the entire application stack with Docker Compose:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker-compose build
+docker-compose up
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This will start:
+- Frontend at http://localhost:3000
+- Auth Service at http://localhost:5001
+- Course Service at http://localhost:5002
+- Grade Service at http://localhost:5003
+- MongoDB at localhost:27017
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+To run individual services:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Frontend only
+npm run dev
 
-## Learn More
+# Individual services (from their respective directories)
+cd src/app/services/auth
+npm run dev
 
-To learn more about Next.js, take a look at the following resources:
+cd src/app/services/course
+npm run dev
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+cd src/app/services/grade
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Service Architecture
 
-## Deploy on Vercel
+| Service | Port | Description |
+|---------|------|-------------|
+| Frontend | 3000 | Next.js web application |
+| Auth Service | 5001 | Handles user authentication |
+| Course Service | 5002 | Manages course information |
+| Grade Service | 5003 | Manages student grades |
+| MongoDB | 27017 | Database for all services |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Environment Variables
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The project uses the following environment variables:
+
+- Frontend:
+    - `AUTH_SERVICE_URL`
+    - `COURSE_SERVICE_URL`
+    - `GRADE_SERVICE_URL`
+
+- Auth Service:
+    - `PORT`
+    - `JWT_SECRET`
+    - `MONGO_URI`
+
+- Course/Grade Services:
+    - `PORT`
+    - `MONGO_URI`
+
+## Technologies Used
+
+- **Frontend**: Next.js, React
+- **Backend**: Node.js, Express
+- **Database**: MongoDB
+- **Containerization**: Docker, Docker Compose
