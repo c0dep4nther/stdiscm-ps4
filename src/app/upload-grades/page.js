@@ -6,6 +6,7 @@ export default function UploadGradesPage() {
   const [form, setForm] = useState({ studentId: "", course: "", grade: "" });
   const [courses, setCourses] = useState([]);
   const [isFaculty, setIsFaculty] = useState(false); // Check if the user is faculty
+  const [userData, setUserData] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -17,9 +18,10 @@ export default function UploadGradesPage() {
 
     try {
       const decoded = JSON.parse(atob(token.split(".")[1])); // Decode JWT safely
-      setIsFaculty(decoded.isStudent === false); // Set to true if faculty
+      setUserData(decoded);
+      setIsFaculty(decoded.role === "faculty"); // Set to true if faculty
 
-      if (decoded.isStudent === true) {
+      if (decoded.isStudent === "student") {
         alert("You are not authorized to access this page.");
         router.push("/courses"); // Redirect to courses page for students
         return;
@@ -40,16 +42,36 @@ export default function UploadGradesPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch("/api/upload-grade", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    alert("Grade uploaded successfully.");
+    try {
+      const response = await fetch("/api/upload-grade", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // Fix data structure to match backend requirements
+        body: JSON.stringify({
+          studentId: form.studentId,
+          courseId: form.course, // Map 'course' to 'courseId'
+          grade: form.grade,
+          uploadedBy: userData.username, // Get the current username
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to upload grade");
+      }
+
+      alert("Grade uploaded successfully.");
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
   };
 
   if (!isFaculty) {
-    return <main className="login-main"><h2 className="login-title">Unauthorized Access</h2></main>;
+    return (
+      <main className="login-main">
+        <h2 className="login-title">Unauthorized Access</h2>
+      </main>
+    );
   }
 
   return (
@@ -71,7 +93,9 @@ export default function UploadGradesPage() {
         >
           <option value="">Select Course</option>
           {courses.map((course, idx) => (
-            <option key={idx} value={course.courseCode}>{course.title}</option>
+            <option key={idx} value={course.courseCode}>
+              {course.title}
+            </option>
           ))}
         </select>
         <input
@@ -81,7 +105,9 @@ export default function UploadGradesPage() {
           onChange={handleChange}
           required
         />
-        <button type="submit" className="login-button">Submit</button>
+        <button type="submit" className="login-button">
+          Submit
+        </button>
       </form>
     </main>
   );
